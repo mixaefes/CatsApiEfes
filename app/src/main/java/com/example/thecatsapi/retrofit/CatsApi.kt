@@ -7,7 +7,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
 interface CatsApi {
-    @GET("/v1/images/search?limit=3&page=100&order=DESC")
+    //api_key:452cb488-7166-416d-859a-31115818696f
+    @GET("/v1/images/search?api_key:452cb488-7166-416d-859a-31115818696f&limit=10&page=0&order=DESC")
     suspend fun getCats(): List<Cat>
 }
 
