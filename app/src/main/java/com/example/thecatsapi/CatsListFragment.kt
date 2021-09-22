@@ -8,9 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.thecatsapi.adapter.CatsViewAdapter
+import com.example.thecatsapi.adapter.PagingCatsAdapter
 import com.example.thecatsapi.databinding.FragmentCatsListBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 
@@ -39,15 +43,27 @@ class CatsListFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentCatsListBinding.inflate(inflater, container, false)
 
-        val myAdapter = CatsViewAdapter()
+      //  val myAdapter = CatsViewAdapter()
+        val myAdapter = PagingCatsAdapter()
         binding.CatsRecyclerId.layoutManager = LinearLayoutManager(activity)
         binding.CatsRecyclerId.adapter = myAdapter
-        catViewModel.cats.observe(this.viewLifecycleOwner) {
+/*        catViewModel.cats.observe(this.viewLifecycleOwner) {
             Log.i(LOG_TAG, "these are my cats: $it")
-            myAdapter.submitList(it)
-        }
+            myAdapter.submitData(it)
+        }*/
+
+         lifecycleScope.launch {
+             catViewModel.cats.collectLatest { it ->
+                 myAdapter.submitData(it)
+             }
+         }
         return binding.root
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
