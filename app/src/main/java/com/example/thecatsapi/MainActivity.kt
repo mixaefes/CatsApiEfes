@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.thecatsapi.adapter.CatsViewAdapter
+import com.example.thecatsapi.adapter.OnItemClickListener
 import com.example.thecatsapi.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -30,4 +31,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val LOG_TAG = "MainActivity"
     }
+
+/*    override fun onCatClick(position: Int) {
+        Log.i(LOG_TAG,"Item was clicked position is: $position")
+    }*/
 }

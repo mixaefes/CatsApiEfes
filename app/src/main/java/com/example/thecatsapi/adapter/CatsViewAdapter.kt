@@ -8,11 +8,11 @@ import com.example.thecatsapi.databinding.CatItemBinding
 import com.example.thecatsapi.retrofit.Cat
 
 
-class CatsViewAdapter : ListAdapter<Cat, CatsViewHolder>(itemComparator) {
+class CatsViewAdapter(private val onItemClickListener: OnItemClickListener ) : ListAdapter<Cat, CatsViewHolder>(itemComparator) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = CatItemBinding.inflate(layoutInflater,parent,false)
-        return CatsViewHolder(binding)
+        return CatsViewHolder(binding,onItemClickListener)
     }
 
     override fun onBindViewHolder(holder: CatsViewHolder, position: Int) {

@@ -9,8 +9,12 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL
 import com.example.thecatsapi.adapter.CatsViewAdapter
+import com.example.thecatsapi.adapter.OnItemClickListener
 import com.example.thecatsapi.adapter.PagingCatsAdapter
 import com.example.thecatsapi.databinding.FragmentCatsListBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -19,7 +23,7 @@ import kotlinx.coroutines.launch
 // TODO: Rename parameter arguments, choose names that match
 
 
-class CatsListFragment : Fragment() {
+class CatsListFragment : Fragment(),OnItemClickListener {
     private var _binding: FragmentCatsListBinding? = null
     private val binding get() = _binding!!
     private val catViewModel: CatsViewModel by viewModels {
@@ -44,8 +48,8 @@ class CatsListFragment : Fragment() {
         _binding = FragmentCatsListBinding.inflate(inflater, container, false)
 
       //  val myAdapter = CatsViewAdapter()
-        val myAdapter = PagingCatsAdapter()
-        binding.CatsRecyclerId.layoutManager = LinearLayoutManager(activity)
+        val myAdapter = PagingCatsAdapter(this)
+        binding.CatsRecyclerId.layoutManager = StaggeredGridLayoutManager(2,VERTICAL)
         binding.CatsRecyclerId.adapter = myAdapter
 /*        catViewModel.cats.observe(this.viewLifecycleOwner) {
             Log.i(LOG_TAG, "these are my cats: $it")
@@ -72,6 +76,10 @@ class CatsListFragment : Fragment() {
 
         private const val LOG_TAG = "ListFragment"
 
+    }
+
+    override fun onCatClick(position: Int) {
+        Log.i(LOG_TAG,"this is item position $position")
     }
 
 }

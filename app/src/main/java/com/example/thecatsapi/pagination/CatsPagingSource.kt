@@ -8,14 +8,14 @@ import com.example.thecatsapi.retrofit.CatsApiService
 import retrofit2.HttpException
 import java.io.IOException
 
-private const val TMDB_STARTING_PAGE_INDEX = 1
+private const val STARTING_PAGE_INDEX = 1
 const val NETWORK_PAGE_SIZE = 3
 class CatsPagingSource(
     private val service: CatsApiService
 ) : PagingSource<Int, Cat>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Cat> {
-        val pageIndex = params.key ?: TMDB_STARTING_PAGE_INDEX
+        val pageIndex = params.key ?: STARTING_PAGE_INDEX
         return try {
             val response = service.getCatsService(page = pageIndex)
             Log.i("CatsPagingSource","it's my response: $response")
@@ -26,7 +26,7 @@ class CatsPagingSource(
             }
             LoadResult.Page(
                 data = response,
-                prevKey = if(pageIndex== TMDB_STARTING_PAGE_INDEX)null else nextKey,
+                prevKey = if(pageIndex== STARTING_PAGE_INDEX)null else nextKey,
                 nextKey = nextKey
             )
         } catch (exception:IOException){

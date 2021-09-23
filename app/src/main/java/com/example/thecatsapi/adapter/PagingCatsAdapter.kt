@@ -8,7 +8,9 @@ import com.example.thecatsapi.databinding.CatItemBinding
 import com.example.thecatsapi.retrofit.Cat
 import javax.security.auth.callback.Callback
 
-class PagingCatsAdapter :
+class PagingCatsAdapter(
+    private val onItemClickListener: OnItemClickListener
+) :
     PagingDataAdapter<Cat, CatsViewHolder>(diffCallback) {
     override fun onBindViewHolder(holder: CatsViewHolder, position: Int) {
         holder.bind(getItem(position)?.url)
@@ -17,7 +19,7 @@ class PagingCatsAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = CatItemBinding.inflate(layoutInflater,parent,false)
-        return CatsViewHolder(binding)
+        return CatsViewHolder(binding,onItemClickListener)
     }
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<Cat>(){
