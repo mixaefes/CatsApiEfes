@@ -14,6 +14,7 @@ class PagingCatsAdapter(
     PagingDataAdapter<Cat, CatsViewHolder>(diffCallback) {
     override fun onBindViewHolder(holder: CatsViewHolder, position: Int) {
         holder.bind(getItem(position)?.url)
+        holder.setItemIdAndImage(getItem(position)?.id!!,getItem(position)?.url!!)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatsViewHolder {

@@ -10,7 +10,7 @@ import com.example.thecatsapi.adapter.CatsViewAdapter
 import com.example.thecatsapi.adapter.OnItemClickListener
 import com.example.thecatsapi.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShowMyCatListener {
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,15 +24,34 @@ class MainActivity : AppCompatActivity() {
     private fun openListFragment() {
         val listFragment = CatsListFragment.newInstance()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container,listFragment)
+        transaction.replace(R.id.container, listFragment)
         transaction.commit()
+    }
+
+    private fun openAboutCatFragment(id:String,imageUrl: String) {
+        val aboutCatFragment = AboutCatFragment.newInstance(id,imageUrl)
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, aboutCatFragment)
+        transaction.addToBackStack("cat_fragment")
+        transaction.commit()
+    }
+
+    override fun onBackPressed() {
+        if(supportFragmentManager.backStackEntryCount>0){
+            supportFragmentManager.popBackStack()
+        }else{
+            super.onBackPressed()
+        }
+
     }
 
     companion object {
         private const val LOG_TAG = "MainActivity"
     }
 
-/*    override fun onCatClick(position: Int) {
-        Log.i(LOG_TAG,"Item was clicked position is: $position")
-    }*/
+
+    override fun showCatInSecondFragment(position: Int,itemId:String,imageUrl:String) {
+        Log.i(LOG_TAG, "Item was clicked position is: $position,id  = $itemId, url:$imageUrl")
+        openAboutCatFragment(itemId,imageUrl)
+    }
 }

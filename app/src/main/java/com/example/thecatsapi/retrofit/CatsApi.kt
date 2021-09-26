@@ -13,6 +13,11 @@ interface CatsApi {
     suspend fun getCats(
         @Query("page")page:Int
     ): List<Cat>
+
+    @GET("/v1/images/search?api_key:452cb488-7166-416d-859a-31115818696f&limit=5&order=desc")
+    suspend fun getPetById(
+        @Query("id")id:String
+    ):List<Cat>
 }
 
 object CatsApiService {
@@ -24,6 +29,11 @@ object CatsApiService {
     suspend fun getCatsService(page:Int): List<Cat> {
         return withContext(Dispatchers.IO) {
             catsService.getCats(page)
+        }
+    }
+    suspend fun getCatByIdService(id:String):Cat{
+        return withContext(Dispatchers.IO){
+            catsService.getPetById(id)[0]
         }
     }
 }

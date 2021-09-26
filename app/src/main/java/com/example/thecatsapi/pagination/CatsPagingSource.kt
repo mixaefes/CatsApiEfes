@@ -22,8 +22,10 @@ class CatsPagingSource(
             val nextKey = if (response.isEmpty()) {
                 null
             } else {
-                pageIndex + (params.loadSize/NETWORK_PAGE_SIZE)
+             //   pageIndex + (params.loadSize/NETWORK_PAGE_SIZE)
+                pageIndex + 1
             }
+            Log.i("CatsPagingSource","umber of page : $nextKey")
             LoadResult.Page(
                 data = response,
                 prevKey = if(pageIndex== STARTING_PAGE_INDEX)null else nextKey,
