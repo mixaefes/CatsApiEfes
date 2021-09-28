@@ -24,22 +24,30 @@ class MainActivity : AppCompatActivity(), ShowMyCatListener {
     private fun openListFragment() {
         val listFragment = CatsListFragment.newInstance()
         val transaction = supportFragmentManager.beginTransaction()
+        transaction.setCustomAnimations(
+            R.anim.card_flip_right_in, R.anim.card_flip_right_out,
+            R.anim.card_flip_left_in, R.anim.card_flip_left_out
+        )
         transaction.replace(R.id.container, listFragment)
         transaction.commit()
     }
 
-    private fun openAboutCatFragment(id:String,imageUrl: String) {
-        val aboutCatFragment = AboutCatFragment.newInstance(id,imageUrl)
+    private fun openAboutCatFragment(id: String, imageUrl: String) {
+        val aboutCatFragment = AboutCatFragment.newInstance(id, imageUrl)
         val transaction = supportFragmentManager.beginTransaction()
+        transaction.setCustomAnimations(
+            R.anim.card_flip_right_in, R.anim.card_flip_right_out,
+            R.anim.card_flip_left_in, R.anim.card_flip_left_out
+        )
         transaction.replace(R.id.container, aboutCatFragment)
         transaction.addToBackStack("cat_fragment")
         transaction.commit()
     }
 
     override fun onBackPressed() {
-        if(supportFragmentManager.backStackEntryCount>0){
+        if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
-        }else{
+        } else {
             super.onBackPressed()
         }
 
@@ -50,8 +58,8 @@ class MainActivity : AppCompatActivity(), ShowMyCatListener {
     }
 
 
-    override fun showCatInSecondFragment(position: Int,itemId:String,imageUrl:String) {
+    override fun showCatInSecondFragment(position: Int, itemId: String, imageUrl: String) {
         Log.i(LOG_TAG, "Item was clicked position is: $position,id  = $itemId, url:$imageUrl")
-        openAboutCatFragment(itemId,imageUrl)
+        openAboutCatFragment(itemId, imageUrl)
     }
 }

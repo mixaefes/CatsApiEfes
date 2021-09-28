@@ -13,25 +13,10 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class CatsViewModel : ViewModel() {
-    // private val _cats = MutableLiveData<PagingData<Cat>>()
-    //  val cats: LiveData<PagingData<Cat>> get() = _cats
 
-    /*    init {
-            viewModelScope.launch {
-               // _cats.value = CatsApiService.getCatsService()
-                _cats = CatsRemoteDataSourceImpl(CatsApiService).getAllCats()
-            }*/
     val cats: Flow<PagingData<Cat>> = CatsRemoteDataSourceImpl(CatsApiService).getAllCats()
 
-    suspend fun getPickedCat(id: String): Cat {
-      return CatsApiService.getCatByIdService(id)
-
-    }
 }
-/*    fun getCats(): LiveData<PagingData<Cat>> {
-       return CatsRemoteDataSourceImpl(CatsApiService).getAllCats()
-    }*/
-//}
 
 class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

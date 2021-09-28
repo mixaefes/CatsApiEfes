@@ -17,27 +17,19 @@ import androidx.lifecycle.lifecycleScope
 import coil.api.load
 import com.example.thecatsapi.databinding.FragmentAboutCatBinding
 import com.example.thecatsapi.retrofit.Cat
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
+import kotlin.concurrent.thread
 
 private const val PARAM_ID = "id"
 private const val PARAM_URL = "image_url"
-var msg: String? = ""
-var lastMsg = ""
-
 class AboutCatFragment : Fragment() {
     private var _binding: FragmentAboutCatBinding? = null
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
     private var pickedItemId: String? = null
     private var pickedImageUrl: String? = null
-    private val myViewModel: CatsViewModel by viewModels {
-        ViewModelFactory()
-    }
-    private var myCat: Cat? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +45,6 @@ class AboutCatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAboutCatBinding.inflate(inflater, container, false)
-        lifecycleScope.launch {
-            myCat = myViewModel.getPickedCat(pickedItemId!!)
-        }
-        Log.i(LOG_TAG, "this is my picked Cat: $myCat")
         binding.DownloadButton.setImageResource(R.drawable.ic_baseline_cloud_download_24)
         binding.pickedCatimageView.load(pickedImageUrl)
         binding.DownloadButton.setOnClickListener {
@@ -71,7 +59,7 @@ class AboutCatFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-   private fun downloadImage(url:String?){
+    private fun downloadImage(url:String?){
        url?.let {
            val directory = File(Environment.DIRECTORY_PICTURES)
            if (!directory.exists()) {
@@ -91,45 +79,24 @@ class AboutCatFragment : Fragment() {
 
            val downloadId = downloadManager.enqueue(request)
            val query = DownloadManager.Query().setFilterById(downloadId)
-           Thread(Runnable {
+           CoroutineScope(Dispatchers.IO).launch{
                var downloading = true
                while (downloading) {
                    val cursor: Cursor = downloadManager.query(query)
                    cursor.moveToFirst()
                    if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
                        downloading = false
-                   }
-                   val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                   msg = statusMessage(url, directory, status)
-/*
-                   if (msg != lastMsg) {
-                       this.runOnUiThread {
-                           Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                       withContext(Dispatchers.Main){
+                           Toast.makeText(context, "image downloaded", Toast.LENGTH_SHORT).show()
+                           binding.DownloadButton.setImageResource(R.drawable.ic_baseline_check_24)
                        }
-                      val lastMsg = msg ?: ""
                    }
-*/
                    cursor.close()
                }
-           }).start()
+           }
        }
-       Toast.makeText(context, "image downloaded", Toast.LENGTH_SHORT).show()
-       binding.DownloadButton.setImageResource(R.drawable.ic_baseline_check_24)
     }
-    private fun statusMessage(url: String, directory: File, status: Int): String? {
-        var msg = ""
-        msg = when (status) {
-            DownloadManager.STATUS_FAILED -> "Download has been failed, please try again"
-            DownloadManager.STATUS_PAUSED -> "Paused"
-            DownloadManager.STATUS_PENDING -> "Pending"
-            DownloadManager.STATUS_RUNNING -> "Downloading..."
-            DownloadManager.STATUS_SUCCESSFUL -> "Image downloaded successfully in $directory" + File.separator + url.substring(
-                url.lastIndexOf("/") + 1
-            )
-            else -> "There's nothing to download"
-        }
-        return msg
-    }
+
 
     companion object {
         @JvmStatic
