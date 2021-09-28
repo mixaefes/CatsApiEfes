@@ -18,22 +18,22 @@ class CatsPagingSource(
         val pageIndex = params.key ?: STARTING_PAGE_INDEX
         return try {
             val response = service.getCatsService(page = pageIndex)
-            Log.i("CatsPagingSource","it's my response: $response")
+            Log.i("CatsPagingSource", "it's my response: $response")
             val nextKey = if (response.isEmpty()) {
                 null
             } else {
-             //   pageIndex + (params.loadSize/NETWORK_PAGE_SIZE)
+                //   pageIndex + (params.loadSize/NETWORK_PAGE_SIZE)
                 pageIndex + 1
             }
-            Log.i("CatsPagingSource","umber of page : $nextKey")
+            Log.i("CatsPagingSource", "umber of page : $nextKey")
             LoadResult.Page(
                 data = response,
-                prevKey = if(pageIndex== STARTING_PAGE_INDEX)null else nextKey,
+                prevKey = if (pageIndex == STARTING_PAGE_INDEX)null else nextKey,
                 nextKey = nextKey
             )
-        } catch (exception:IOException){
+        } catch (exception: IOException) {
             return LoadResult.Error(exception)
-        }catch (exception:HttpException){
+        } catch (exception: HttpException) {
             return LoadResult.Error(exception)
         }
     }
@@ -42,9 +42,10 @@ class CatsPagingSource(
      * The refresh key is used for subsequent calls to PagingSource.Load after the initial load.
      */
     override fun getRefreshKey(state: PagingState<Int, Cat>): Int? {
-       return state.anchorPosition?.let{
-            anchorPosition -> state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-           ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+        return state.anchorPosition?.let {
+            anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 }

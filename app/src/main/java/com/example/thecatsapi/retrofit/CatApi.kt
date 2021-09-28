@@ -8,16 +8,15 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CatsApi {
-    //api_key:452cb488-7166-416d-859a-31115818696f
     @GET("v1/images/search?api_key:452cb488-7166-416d-859a-31115818696f&limit=10&order=DESC")
     suspend fun getCats(
-        @Query("page")page:Int
+        @Query("page") page: Int
     ): List<Cat>
 
     @GET("/v1/images/search?api_key:452cb488-7166-416d-859a-31115818696f&limit=5&order=desc")
     suspend fun getPetById(
-        @Query("id")id:String
-    ):List<Cat>
+        @Query("id") id: String
+    ): List<Cat>
 }
 
 object CatsApiService {
@@ -26,14 +25,13 @@ object CatsApiService {
         .baseUrl("https://api.thecatapi.com/")
         .build()
     private val catsService = retrofit.create(CatsApi::class.java)
-    suspend fun getCatsService(page:Int): List<Cat> {
+    suspend fun getCatsService(page: Int): List<Cat> {
         return withContext(Dispatchers.IO) {
             catsService.getCats(page)
         }
     }
-    suspend fun getCatByIdService(id:String):Cat{
-        return withContext(Dispatchers.IO){
-            catsService.getPetById(id)[0]
-        }
+
+    suspend fun getCatByIdService(id: String): Cat {
+        return withContext(Dispatchers.IO) { catsService.getPetById(id)[0] }
     }
 }

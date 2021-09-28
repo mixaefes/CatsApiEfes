@@ -1,10 +1,8 @@
 package com.example.thecatsapi.pagination
 
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.liveData
 import com.example.thecatsapi.retrofit.Cat
 import com.example.thecatsapi.retrofit.CatsApiService
 import kotlinx.coroutines.flow.Flow

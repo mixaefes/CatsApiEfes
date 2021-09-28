@@ -21,12 +21,11 @@ class CatsViewHolder(
 
     override fun onClick(v: View?) {
         Log.i("ViewHolder", "Item is clicked")
-        clickListener.onCatClick(absoluteAdapterPosition,itemId,imageUrl)
+        clickListener.onCatClick(absoluteAdapterPosition, itemId, imageUrl)
     }
 
-    fun setItemIdAndImage(_id: String,_imageUrl: String) {
+    fun setItemIdAndImage(_id: String, _imageUrl: String) {
         imageUrl = _imageUrl
         itemId = _id
     }
-
 }
