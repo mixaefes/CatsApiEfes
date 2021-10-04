@@ -1,24 +1,16 @@
 package com.example.thecatsapi
 
-import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagingData
+import com.example.thecatsapi.pagination.CatsRemoteDataSourceImpl
 import com.example.thecatsapi.retrofit.Cat
 import com.example.thecatsapi.retrofit.CatsApiService
-import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
+import kotlinx.coroutines.flow.Flow
 
 class CatsViewModel : ViewModel() {
-    private val _cats = MutableLiveData<List<Cat>>()
-    val cats: LiveData<List<Cat>> get() = _cats
-
-    init {
-        viewModelScope.launch {
-            _cats.value = CatsApiService.getCatsService()
-        }
-
-    }
+    val cats: Flow<PagingData<Cat>> = CatsRemoteDataSourceImpl(CatsApiService).getAllCats()
 }
-
 class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CatsViewModel::class.java)) {
@@ -26,5 +18,4 @@ class ViewModelFactory : ViewModelProvider.Factory {
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-
 }
